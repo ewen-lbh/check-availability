@@ -6,7 +6,7 @@ Usage:
   
 Options:
   -h, --help           Show this help
-  -v, --verbose=LEVEL  Set verbosity. 0 for quiet, 4 for debug. [default: 0]
+  -v, --verbose=LEVEL  Set verbosity. 0 for quiet, 4 for debug. [default: 1]
 
 Status codes:
   1: An error occured
@@ -28,6 +28,7 @@ from .log import Logger
 from os import path, stat
 from sys import exit
 
+
 def main():
   # Parse the CLI input
   args: Dict[str, str] = docopt(__doc__)
@@ -37,8 +38,8 @@ def main():
   log = Logger(int(args['--verbose']))
   log.debug("Running with args: {0}", json.dumps(args, ensure_ascii=False))
   # Get the mapping of <service> to URL to test on
-  serices_filepath = path.join(path.dirname(__file__), 'services.json')
-  with open(serices_filepath, 'r') as file:
+  services_filepath = path.join(path.dirname(__file__), 'services.json')
+  with open(services_filepath, 'r') as file:
     services: Dict[str, str] = json.loads(file.read())
   # Get the URL to test
   url = services[service].format(name)
@@ -55,4 +56,3 @@ def main():
     log.error("The name {0} is <options=bold>not</options=bold> available on {1}", name, service)
   # Exit w/ 0 if available, 1 otherwise.
   exit(0 if available else 2)
-  
